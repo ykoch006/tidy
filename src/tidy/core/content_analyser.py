@@ -65,7 +65,7 @@ PROFILES: dict[str, list[tuple[str, float]]] = {
     ],
 }  # fmt: skip
 _COMPILED = {
-    cat: [(re.compile(rf"\b{p}\b", re.IGNORECASE), w, p) for p, w in phrases]
+    cat: [(re.compile(rf"\b{p}\b", re.IGNORECASE), w) for p, w in phrases]
     for cat, phrases in PROFILES.items()
 }
 
