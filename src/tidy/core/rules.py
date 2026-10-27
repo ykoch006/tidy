@@ -30,252 +30,46 @@ def _register(category: str, confidence: float, family: str, *exts: str) -> None
         _EXT[ext] = (category, confidence, family)
 
 
-_register(
-    "documents.general",
-    0.6,
-    DOC,
-    ".pdf",
-    ".doc",
-    ".docx",
-    ".odt",
-    ".rtf",
-    ".txt",
-    ".md",
-    ".tex",
-    ".pages",
-    ".xls",
-    ".xlsx",
-    ".xlsm",
-    ".ods",
-    ".csv",
-    ".numbers",
-    ".ppt",
-    ".pptx",
-    ".odp",
-    ".key",
-    ".epub",
-    ".mobi",
-    ".djvu",
-    ".xps",
-    ".oxps",
-)
-_register(
-    "images.general",
-    0.6,
-    IMG,
-    ".jpg",
-    ".jpeg",
-    ".png",
-    ".gif",
-    ".webp",
-    ".bmp",
-    ".tif",
-    ".tiff",
-    ".avif",
-    ".jfif",
-)
-_register(
-    "images.photos",
-    0.85,
-    IMG,
-    ".heic",
-    ".heif",
-    ".raw",
-    ".cr2",
-    ".cr3",
-    ".nef",
-    ".arw",
-    ".dng",
-    ".orf",
-    ".rw2",
-    ".raf",
-)
-_register(
-    "images.artwork",
-    0.85,
-    IMG,
-    ".psd",
-    ".ai",
-    ".svg",
-    ".kra",
-    ".xcf",
-    ".procreate",
-    ".clip",
-    ".sketch",
-    ".fig",
-    ".afdesign",
-    ".afphoto",
-    ".eps",
-    ".blend",
-    ".ico",
-)
-_register(
-    "media.audio",
-    0.85,
-    AUDIO,
-    ".mp3",
-    ".wav",
-    ".flac",
-    ".aac",
-    ".m4a",
-    ".ogg",
-    ".opus",
-    ".wma",
-    ".aif",
-    ".aiff",
-    ".mid",
-    ".midi",
-    ".alac",
-    ".amr",
-)
-_register(
-    "media.video",
-    0.85,
-    VIDEO,
-    ".mp4",
-    ".mkv",
-    ".mov",
-    ".avi",
-    ".wmv",
-    ".webm",
-    ".m4v",
-    ".flv",
-    ".mpg",
-    ".mpeg",
-    ".3gp",
-    ".ts",
-    ".mts",
-)
+# fmt: off
+_register("documents.general", 0.6, DOC,
+          ".pdf", ".doc", ".docx", ".odt", ".rtf", ".txt", ".md", ".tex", ".pages",
+          ".xls", ".xlsx", ".xlsm", ".ods", ".csv", ".numbers",
+          ".ppt", ".pptx", ".odp", ".key", ".epub", ".mobi", ".djvu", ".xps", ".oxps")
+_register("images.general", 0.6, IMG,
+          ".jpg", ".jpeg", ".png", ".gif", ".webp", ".bmp", ".tif", ".tiff", ".avif", ".jfif")
+_register("images.photos", 0.85, IMG,
+          ".heic", ".heif", ".raw", ".cr2", ".cr3", ".nef", ".arw", ".dng", ".orf", ".rw2", ".raf")
+_register("images.artwork", 0.85, IMG,
+          ".psd", ".ai", ".svg", ".kra", ".xcf", ".procreate", ".clip", ".sketch", ".fig",
+          ".afdesign", ".afphoto", ".eps", ".blend", ".ico")
+_register("media.audio", 0.85, AUDIO,
+          ".mp3", ".wav", ".flac", ".aac", ".m4a", ".ogg", ".opus", ".wma", ".aif", ".aiff",
+          ".mid", ".midi", ".alac", ".amr")
+_register("media.video", 0.85, VIDEO,
+          ".mp4", ".mkv", ".mov", ".avi", ".wmv", ".webm", ".m4v", ".flv", ".mpg", ".mpeg",
+          ".3gp", ".ts", ".mts")
 _register("media.video", 0.6, VIDEO, ".srt", ".vtt", ".ass", ".ssa", ".sub")
-_register(
-    "software.installers",
-    0.8,
-    SOFT,
-    ".exe",
-    ".msi",
-    ".msix",
-    ".msixbundle",
-    ".appx",
-    ".appxbundle",
-    ".dmg",
-    ".pkg",
-    ".deb",
-    ".rpm",
-    ".apk",
-    ".appimage",
-    ".flatpakref",
-    ".vsix",
-)
+_register("software.installers", 0.8, SOFT,
+          ".exe", ".msi", ".msix", ".msixbundle", ".appx", ".appxbundle", ".dmg", ".pkg",
+          ".deb", ".rpm", ".apk", ".appimage", ".flatpakref", ".vsix")
 _register("software.installers", 0.7, SOFT, ".iso", ".img")
-_register(
-    "archives",
-    0.75,
-    ARCH,
-    ".zip",
-    ".rar",
-    ".7z",
-    ".tar",
-    ".gz",
-    ".tgz",
-    ".bz2",
-    ".xz",
-    ".zst",
-    ".cab",
-    ".lz",
-)
+_register("archives", 0.75, ARCH,
+          ".zip", ".rar", ".7z", ".tar", ".gz", ".tgz", ".bz2", ".xz", ".zst", ".cab", ".lz")
 _register("projects.python", 0.6, CODE, ".py", ".pyw")
 _register("projects.python", 0.75, CODE, ".ipynb")
-_register(
-    "projects.web",
-    0.55,
-    CODE,
-    ".html",
-    ".htm",
-    ".css",
-    ".js",
-    ".ts",
-    ".jsx",
-    ".tsx",
-    ".php",
-    ".vue",
-)
-_register(
-    "projects.code",
-    0.55,
-    CODE,
-    ".c",
-    ".cpp",
-    ".h",
-    ".hpp",
-    ".cs",
-    ".java",
-    ".kt",
-    ".go",
-    ".rs",
-    ".rb",
-    ".swift",
-    ".sh",
-    ".ps1",
-    ".bat",
-    ".sql",
-    ".r",
-    ".m",
-    ".lua",
-    ".scala",
-    ".dart",
-)
-_register(
-    "projects.music",
-    0.9,
-    AUDIO,
-    ".als",
-    ".flp",
-    ".rpp",
-    ".ptx",
-    ".cpr",
-    ".aup3",
-    ".logicx",
-    ".band",
-    ".sf2",
-    ".nki",
-)
-_register(
-    OTHER,
-    0.7,
-    MISC,
-    ".ttf",
-    ".otf",
-    ".woff",
-    ".woff2",
-    ".torrent",
-    ".ics",
-    ".vcf",
-    ".url",
-    ".lnk",
-    ".gpx",
-    ".kml",
-    ".stl",
-    ".obj",
-    ".3mf",
-    ".gcode",
-)
-_register(
-    OTHER,
-    0.45,
-    MISC,
-    ".json",
-    ".xml",
-    ".yaml",
-    ".yml",
-    ".ini",
-    ".cfg",
-    ".log",
-    ".dat",
-    ".bin",
-    ".db",
-    ".sqlite",
-)
-
+_register("projects.web", 0.55, CODE,
+          ".html", ".htm", ".css", ".js", ".ts", ".jsx", ".tsx", ".php", ".vue")
+_register("projects.code", 0.55, CODE,
+          ".c", ".cpp", ".h", ".hpp", ".cs", ".java", ".kt", ".go", ".rs", ".rb", ".swift",
+          ".sh", ".ps1", ".bat", ".sql", ".r", ".m", ".lua", ".scala", ".dart")
+_register("projects.music", 0.9, AUDIO,
+          ".als", ".flp", ".rpp", ".ptx", ".cpr", ".aup3", ".logicx", ".band", ".sf2", ".nki")
+_register(OTHER, 0.7, MISC,
+          ".ttf", ".otf", ".woff", ".woff2", ".torrent", ".ics", ".vcf", ".url", ".lnk",
+          ".gpx", ".kml", ".stl", ".obj", ".3mf", ".gcode")
+_register(OTHER, 0.45, MISC,
+          ".json", ".xml", ".yaml", ".yml", ".ini", ".cfg", ".log", ".dat", ".bin", ".db",
+          ".sqlite")
 # fmt: on
 
 
@@ -383,6 +177,16 @@ def extension_info(ext: str) -> tuple[str, float, str] | None:
     return _EXT.get(ext.lower())
 
 
+FAMILY_LABELS = {
+    DOC: "documents", IMG: "images", AUDIO: "audio", VIDEO: "video", SOFT: "software",
+    ARCH: "archives", CODE: "code", MISC: "miscellaneous files",
+}  # fmt: skip
+
+
+def describe_extension(ext: str, family: str) -> str:
+    return f"{ext.lstrip('.').upper()} files are usually {FAMILY_LABELS.get(family, family)}"
+
+
 def family_of(category: str) -> str:
     head = category.split(".", 1)[0]
     return {
@@ -400,7 +204,7 @@ def classify_file_by_rules(item: FileItem) -> Classification:
         return Classification(OTHER, 0.3, Source.FALLBACK, [reason])
 
     category, confidence, family = info
-    reasons = [f"'{ext}' is typically {category.replace('.', ' / ')}"]
+    reasons = [describe_extension(ext, family)]
     for rule in KEYWORD_RULES:
         if family in rule.families and rule.pattern.search(norm):
             if rule.confidence > confidence or rule.category != category:
@@ -422,16 +226,28 @@ def classify_folder_by_rules(item: FileItem) -> Classification:
     if item.file_count == 0:
         return Classification(OTHER, 0.3, Source.FALLBACK, ["empty folder"])
 
+    # Vote with the sampled file names (so "DSC0001.JPG" counts as a photo) and
+    # fall back to extension counts for the files that were not sampled.
     votes: Counter[str] = Counter()
-    for ext, count in item.ext_counts.items():
-        info = extension_info(ext)
-        votes[info[0] if info else OTHER] += count
+    for name in item.sample_names:
+        sample = FileItem(path=item.path / name, root=item.root, size=0, mtime_ns=0)
+        votes[classify_file_by_rules(sample).category] += 1
+    unsampled = max(0, item.file_count - len(item.sample_names))
+    if unsampled or not votes:
+        for ext, count in item.ext_counts.items():
+            info = extension_info(ext)
+            votes[info[0] if info else OTHER] += count * unsampled / max(1, item.file_count)
     category, top = votes.most_common(1)[0]
-    share = top / max(1, sum(votes.values()))
+    share = top / max(1e-9, sum(votes.values()))
     # Refine using the folder name (e.g. "Lecture notes" full of PDFs).
     family = family_of(category)
     norm = normalise_name(item.name + ".")
-    reasons = [f"{share:.0%} of its {item.file_count} files are {category.replace('.', ' / ')}"]
+    label = (
+        FAMILY_LABELS.get(family, family)
+        if category.endswith(".general")
+        else (category.split(".")[-1])
+    )
+    reasons = [f"{share:.0%} of its {item.file_count} files look like {label}"]
     for rule in KEYWORD_RULES:
         if family in rule.families and rule.pattern.search(norm):
             category = rule.category
