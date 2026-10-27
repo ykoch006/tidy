@@ -20,8 +20,16 @@ def item(name: str, size: int = 10) -> FileItem:
 
 def folder(name: str, project: str | None = None, exts: dict[str, int] | None = None) -> FileItem:
     exts = exts or {}
-    return FileItem(path=ROOT / name, root=ROOT, size=100, mtime_ns=0, kind=ItemKind.FOLDER,
-                    project_type=project, file_count=sum(exts.values()), ext_counts=exts)
+    return FileItem(
+        path=ROOT / name,
+        root=ROOT,
+        size=100,
+        mtime_ns=0,
+        kind=ItemKind.FOLDER,
+        project_type=project,
+        file_count=sum(exts.values()),
+        ext_counts=exts,
+    )
 
 
 @pytest.mark.parametrize(
@@ -98,11 +106,13 @@ def test_folder_projects_and_dominant_content() -> None:
 
 
 def test_category_tree_overrides_and_fallback() -> None:
-    tree = CategoryTree(overrides={
-        "documents.university": {"enabled": False},
-        "images.photos": {"folder": "Pictures/Camera"},
-        "review": {"enabled": False},  # cannot disable the safety net
-    })
+    tree = CategoryTree(
+        overrides={
+            "documents.university": {"enabled": False},
+            "images.photos": {"folder": "Pictures/Camera"},
+            "review": {"enabled": False},  # cannot disable the safety net
+        }
+    )
     assert tree.resolve("documents.university").key == "documents.general"
     assert tree.get("images.photos").folder == "Pictures/Camera"
     assert tree.resolve("review").key == "review"
@@ -118,7 +128,9 @@ def test_category_tree_rejects_unsafe_folder_override() -> None:
 
 
 def test_custom_category() -> None:
-    tree = CategoryTree(custom=[{"key": "work.clients", "folder": "Work/Clients", "label": "Clients"}])
+    tree = CategoryTree(
+        custom=[{"key": "work.clients", "folder": "Work/Clients", "label": "Clients"}]
+    )
     assert tree.get("work.clients").top_level == "Work"
     assert tree.resolve("work.clients").key == "work.clients"
 
@@ -161,7 +173,9 @@ class FakeContent:
 
 def test_content_layer_overrides_only_when_more_confident() -> None:
     tree = CategoryTree()
-    strong = FakeContent(Classification("documents.career", 0.9, Source.CONTENT, ["looks like a CV"]))
+    strong = FakeContent(
+        Classification("documents.career", 0.9, Source.CONTENT, ["looks like a CV"])
+    )
     assert Classifier(tree, content=strong).classify(item("doc.pdf")).category == "documents.career"
     weak = FakeContent(Classification("documents.career", 0.3, Source.CONTENT, ["meh"]))
     assert Classifier(tree, content=weak).classify(item("doc.pdf")).category == "documents.general"
@@ -212,8 +226,11 @@ def test_grouping_does_not_merge_unrelated_families() -> None:
 
 
 def test_series_grouping() -> None:
-    items = [item(f"Lecture {n}.pdf") for n in range(1, 5)] + [item("IMG_1.jpg"), item("IMG_2.jpg"),
-                                                               item("IMG_3.jpg")]
+    items = [item(f"Lecture {n}.pdf") for n in range(1, 5)] + [
+        item("IMG_1.jpg"),
+        item("IMG_2.jpg"),
+        item("IMG_3.jpg"),
+    ]
     groups = find_groups(items)
     assert len(groups) == 1
     assert groups[0].kind == "series"

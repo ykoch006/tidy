@@ -61,7 +61,8 @@ def run_pipeline(
         reserved_top_level=config.categories.top_level_names(),
     )
     scanner = Scanner(
-        options, cancel,
+        options,
+        cancel,
         progress=lambda st, p: report("scan", st.files + st.folders, 0, p.name),
     )
     report("scan", 0, 0, str(root))

@@ -120,8 +120,9 @@ def test_assert_no_links_between(tmp_path: Path) -> None:
             pytest.skip("symlinks not permitted")
         import subprocess
 
-        subprocess.run(["cmd", "/c", "mklink", "/J", str(link), str(outside)], check=True,
-                       capture_output=True)
+        subprocess.run(
+            ["cmd", "/c", "mklink", "/J", str(link), str(outside)], check=True, capture_output=True
+        )
     with pytest.raises(UnsafePathError):
         paths.assert_no_links_between(root, link / "x.txt")
 

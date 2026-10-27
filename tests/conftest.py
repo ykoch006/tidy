@@ -17,7 +17,7 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 # Resolve the real Downloads folder *before* any override, purely so the guard
 # below can prove tests never point at it.
-from tidy.utils import paths as _paths  # noqa: E402
+from tidy.utils import paths as _paths
 
 _saved = os.environ.pop("TIDY_DOWNLOADS_DIR", None)
 REAL_DOWNLOADS = _paths.default_downloads_dir().resolve()

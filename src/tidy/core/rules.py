@@ -30,44 +30,251 @@ def _register(category: str, confidence: float, family: str, *exts: str) -> None
         _EXT[ext] = (category, confidence, family)
 
 
-_register("documents.general", 0.6, DOC,
-          ".pdf", ".doc", ".docx", ".odt", ".rtf", ".txt", ".md", ".tex", ".pages",
-          ".xls", ".xlsx", ".xlsm", ".ods", ".csv", ".numbers",
-          ".ppt", ".pptx", ".odp", ".key", ".epub", ".mobi", ".djvu", ".xps", ".oxps")
-_register("images.general", 0.6, IMG,
-          ".jpg", ".jpeg", ".png", ".gif", ".webp", ".bmp", ".tif", ".tiff", ".avif", ".jfif")
-_register("images.photos", 0.85, IMG,
-          ".heic", ".heif", ".raw", ".cr2", ".cr3", ".nef", ".arw", ".dng", ".orf", ".rw2", ".raf")
-_register("images.artwork", 0.85, IMG,
-          ".psd", ".ai", ".svg", ".kra", ".xcf", ".procreate", ".clip", ".sketch", ".fig",
-          ".afdesign", ".afphoto", ".eps", ".blend", ".ico")
-_register("media.audio", 0.85, AUDIO,
-          ".mp3", ".wav", ".flac", ".aac", ".m4a", ".ogg", ".opus", ".wma", ".aif", ".aiff",
-          ".mid", ".midi", ".alac", ".amr")
-_register("media.video", 0.85, VIDEO,
-          ".mp4", ".mkv", ".mov", ".avi", ".wmv", ".webm", ".m4v", ".flv", ".mpg", ".mpeg",
-          ".3gp", ".ts", ".mts")
+_register(
+    "documents.general",
+    0.6,
+    DOC,
+    ".pdf",
+    ".doc",
+    ".docx",
+    ".odt",
+    ".rtf",
+    ".txt",
+    ".md",
+    ".tex",
+    ".pages",
+    ".xls",
+    ".xlsx",
+    ".xlsm",
+    ".ods",
+    ".csv",
+    ".numbers",
+    ".ppt",
+    ".pptx",
+    ".odp",
+    ".key",
+    ".epub",
+    ".mobi",
+    ".djvu",
+    ".xps",
+    ".oxps",
+)
+_register(
+    "images.general",
+    0.6,
+    IMG,
+    ".jpg",
+    ".jpeg",
+    ".png",
+    ".gif",
+    ".webp",
+    ".bmp",
+    ".tif",
+    ".tiff",
+    ".avif",
+    ".jfif",
+)
+_register(
+    "images.photos",
+    0.85,
+    IMG,
+    ".heic",
+    ".heif",
+    ".raw",
+    ".cr2",
+    ".cr3",
+    ".nef",
+    ".arw",
+    ".dng",
+    ".orf",
+    ".rw2",
+    ".raf",
+)
+_register(
+    "images.artwork",
+    0.85,
+    IMG,
+    ".psd",
+    ".ai",
+    ".svg",
+    ".kra",
+    ".xcf",
+    ".procreate",
+    ".clip",
+    ".sketch",
+    ".fig",
+    ".afdesign",
+    ".afphoto",
+    ".eps",
+    ".blend",
+    ".ico",
+)
+_register(
+    "media.audio",
+    0.85,
+    AUDIO,
+    ".mp3",
+    ".wav",
+    ".flac",
+    ".aac",
+    ".m4a",
+    ".ogg",
+    ".opus",
+    ".wma",
+    ".aif",
+    ".aiff",
+    ".mid",
+    ".midi",
+    ".alac",
+    ".amr",
+)
+_register(
+    "media.video",
+    0.85,
+    VIDEO,
+    ".mp4",
+    ".mkv",
+    ".mov",
+    ".avi",
+    ".wmv",
+    ".webm",
+    ".m4v",
+    ".flv",
+    ".mpg",
+    ".mpeg",
+    ".3gp",
+    ".ts",
+    ".mts",
+)
 _register("media.video", 0.6, VIDEO, ".srt", ".vtt", ".ass", ".ssa", ".sub")
-_register("software.installers", 0.8, SOFT,
-          ".exe", ".msi", ".msix", ".msixbundle", ".appx", ".appxbundle", ".dmg", ".pkg",
-          ".deb", ".rpm", ".apk", ".appimage", ".flatpakref", ".vsix")
+_register(
+    "software.installers",
+    0.8,
+    SOFT,
+    ".exe",
+    ".msi",
+    ".msix",
+    ".msixbundle",
+    ".appx",
+    ".appxbundle",
+    ".dmg",
+    ".pkg",
+    ".deb",
+    ".rpm",
+    ".apk",
+    ".appimage",
+    ".flatpakref",
+    ".vsix",
+)
 _register("software.installers", 0.7, SOFT, ".iso", ".img")
-_register("archives", 0.75, ARCH,
-          ".zip", ".rar", ".7z", ".tar", ".gz", ".tgz", ".bz2", ".xz", ".zst", ".cab", ".lz")
+_register(
+    "archives",
+    0.75,
+    ARCH,
+    ".zip",
+    ".rar",
+    ".7z",
+    ".tar",
+    ".gz",
+    ".tgz",
+    ".bz2",
+    ".xz",
+    ".zst",
+    ".cab",
+    ".lz",
+)
 _register("projects.python", 0.6, CODE, ".py", ".pyw")
 _register("projects.python", 0.75, CODE, ".ipynb")
-_register("projects.web", 0.55, CODE, ".html", ".htm", ".css", ".js", ".ts", ".jsx", ".tsx",
-          ".php", ".vue")
-_register("projects.code", 0.55, CODE,
-          ".c", ".cpp", ".h", ".hpp", ".cs", ".java", ".kt", ".go", ".rs", ".rb", ".swift",
-          ".sh", ".ps1", ".bat", ".sql", ".r", ".m", ".lua", ".scala", ".dart")
-_register("projects.music", 0.9, AUDIO,
-          ".als", ".flp", ".rpp", ".ptx", ".cpr", ".aup3", ".logicx", ".band", ".sf2", ".nki")
-_register(OTHER, 0.7, MISC,
-          ".ttf", ".otf", ".woff", ".woff2", ".torrent", ".ics", ".vcf", ".url", ".lnk",
-          ".gpx", ".kml", ".stl", ".obj", ".3mf", ".gcode")
-_register(OTHER, 0.45, MISC, ".json", ".xml", ".yaml", ".yml", ".ini", ".cfg", ".log", ".dat",
-          ".bin", ".db", ".sqlite")
+_register(
+    "projects.web",
+    0.55,
+    CODE,
+    ".html",
+    ".htm",
+    ".css",
+    ".js",
+    ".ts",
+    ".jsx",
+    ".tsx",
+    ".php",
+    ".vue",
+)
+_register(
+    "projects.code",
+    0.55,
+    CODE,
+    ".c",
+    ".cpp",
+    ".h",
+    ".hpp",
+    ".cs",
+    ".java",
+    ".kt",
+    ".go",
+    ".rs",
+    ".rb",
+    ".swift",
+    ".sh",
+    ".ps1",
+    ".bat",
+    ".sql",
+    ".r",
+    ".m",
+    ".lua",
+    ".scala",
+    ".dart",
+)
+_register(
+    "projects.music",
+    0.9,
+    AUDIO,
+    ".als",
+    ".flp",
+    ".rpp",
+    ".ptx",
+    ".cpr",
+    ".aup3",
+    ".logicx",
+    ".band",
+    ".sf2",
+    ".nki",
+)
+_register(
+    OTHER,
+    0.7,
+    MISC,
+    ".ttf",
+    ".otf",
+    ".woff",
+    ".woff2",
+    ".torrent",
+    ".ics",
+    ".vcf",
+    ".url",
+    ".lnk",
+    ".gpx",
+    ".kml",
+    ".stl",
+    ".obj",
+    ".3mf",
+    ".gcode",
+)
+_register(
+    OTHER,
+    0.45,
+    MISC,
+    ".json",
+    ".xml",
+    ".yaml",
+    ".yml",
+    ".ini",
+    ".cfg",
+    ".log",
+    ".dat",
+    ".bin",
+    ".db",
+    ".sqlite",
+)
 
 # fmt: on
 
@@ -81,34 +288,85 @@ class KeywordRule:
     reason: str
 
 
-def _kw(category: str, families: set[str], regex: str, confidence: float, reason: str) -> KeywordRule:
-    return KeywordRule(category, frozenset(families), re.compile(regex, re.IGNORECASE),
-                       confidence, reason)
+def _kw(
+    category: str, families: set[str], regex: str, confidence: float, reason: str
+) -> KeywordRule:
+    return KeywordRule(
+        category, frozenset(families), re.compile(regex, re.IGNORECASE), confidence, reason
+    )
 
 
 KEYWORD_RULES: tuple[KeywordRule, ...] = (
     # Screenshots before photos: "Screenshot_20240101_120000.png" looks like both.
-    _kw("images.screenshots", {IMG}, r"^(screenshot|screen ?shot|screen capture|capture|snip|"
-        r"scr \d|snapshot)|\bscreenshot\b", 0.92, "filename looks like a screenshot"),
-    _kw("images.photos", {IMG}, r"^(img|dsc|dscn|dscf|pxl|p|gopr|dji|mvimg)[ _]?\d{3,}|"
-        r"^\d{8}[ _]\d{6}|whatsapp image|^photo[ _-]", 0.88, "camera-style filename"),
-    _kw("images.artwork", {IMG}, r"\b(wallpaper|artwork|illustration|drawing|sketch|render|"
-        r"logo|icon|banner|poster|mockup)\b", 0.75, "artwork keyword in filename"),
-    _kw("documents.career", {DOC}, r"\b(cv|resume|résumé|curriculum vitae|cover letter|"
+    _kw(
+        "images.screenshots",
+        {IMG},
+        r"^(screenshot|screen ?shot|screen capture|capture|snip|"
+        r"scr \d|snapshot)|\bscreenshot\b",
+        0.92,
+        "filename looks like a screenshot",
+    ),
+    _kw(
+        "images.photos",
+        {IMG},
+        r"^(img|dsc|dscn|dscf|pxl|p|gopr|dji|mvimg)[ _]?\d{3,}|"
+        r"^\d{8}[ _]\d{6}|whatsapp image|^photo[ _-]",
+        0.88,
+        "camera-style filename",
+    ),
+    _kw(
+        "images.artwork",
+        {IMG},
+        r"\b(wallpaper|artwork|illustration|drawing|sketch|render|"
+        r"logo|icon|banner|poster|mockup)\b",
+        0.75,
+        "artwork keyword in filename",
+    ),
+    _kw(
+        "documents.career",
+        {DOC},
+        r"\b(cv|resume|résumé|curriculum vitae|cover letter|"
         r"covering letter|job offer|offer letter|employment contract|reference letter|"
-        r"portfolio|interview)\b", 0.88, "career keyword in filename"),
-    _kw("documents.finance", {DOC, IMG}, r"\b(invoice|receipt|statement|payslip|pay slip|"
+        r"portfolio|interview)\b",
+        0.88,
+        "career keyword in filename",
+    ),
+    _kw(
+        "documents.finance",
+        {DOC, IMG},
+        r"\b(invoice|receipt|statement|payslip|pay slip|"
         r"payroll|tax|p60|p45|w-?2|1099|bank|mortgage|bill|order confirmation|quote|budget|"
-        r"expenses?|vat)\b", 0.85, "finance keyword in filename"),
-    _kw("documents.university", {DOC}, r"\b(assignment|coursework|lecture|tutorial|seminar|"
+        r"expenses?|vat)\b",
+        0.85,
+        "finance keyword in filename",
+    ),
+    _kw(
+        "documents.university",
+        {DOC},
+        r"\b(assignment|coursework|lecture|tutorial|seminar|"
         r"module|syllabus|dissertation|thesis|essay|homework|exam|revision|lab report|"
         r"problem sheet|worksheet|cw ?\d|week ?\d{1,2}|lab ?\d{1,2}|"
-        r"[a-z]{2,5}\d{3,4}[a-z]?)\b", 0.8, "academic keyword in filename"),
-    _kw("documents.personal", {DOC, IMG}, r"\b(passport|driving licen[cs]e|birth certificate|"
+        r"[a-z]{2,5}\d{3,4}[a-z]?)\b",
+        0.8,
+        "academic keyword in filename",
+    ),
+    _kw(
+        "documents.personal",
+        {DOC, IMG},
+        r"\b(passport|driving licen[cs]e|birth certificate|"
         r"visa|insurance|medical|prescription|boarding pass|e-?ticket|ticket|booking|"
-        r"reservation|tenancy|lease)\b", 0.82, "personal-document keyword in filename"),
-    _kw("software.installers", {SOFT}, r"\b(setup|installer|install|x64|x86|win64|win32|amd64|"
-        r"arm64|portable)\b", 0.92, "installer keyword in filename"),
+        r"reservation|tenancy|lease)\b",
+        0.82,
+        "personal-document keyword in filename",
+    ),
+    _kw(
+        "software.installers",
+        {SOFT},
+        r"\b(setup|installer|install|x64|x86|win64|win32|amd64|"
+        r"arm64|portable)\b",
+        0.92,
+        "installer keyword in filename",
+    ),
     _kw("media.video", {VIDEO}, r"\b(screen ?recording|screencast)\b", 0.9, "screen recording"),
 )
 
@@ -156,7 +414,9 @@ def classify_folder_by_rules(item: FileItem) -> Classification:
     """Classify a folder unit by project markers, else by its dominant contents."""
     if item.project_type:
         return Classification(
-            project_category(item.project_type), 0.95, Source.RULE,
+            project_category(item.project_type),
+            0.95,
+            Source.RULE,
             [f"folder is a {item.project_type} project"],
         )
     if item.file_count == 0:

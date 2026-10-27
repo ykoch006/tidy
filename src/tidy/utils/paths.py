@@ -92,7 +92,10 @@ def _windows_known_downloads() -> Path | None:
 
     # {374DE290-123F-4565-9164-39C4925E467B}
     folder_id = GUID(
-        0x374DE290, 0x123F, 0x4565, (ctypes.c_ubyte * 8)(0x91, 0x64, 0x39, 0xC4, 0x92, 0x5E, 0x46, 0x7B)
+        0x374DE290,
+        0x123F,
+        0x4565,
+        (ctypes.c_ubyte * 8)(0x91, 0x64, 0x39, 0xC4, 0x92, 0x5E, 0x46, 0x7B),
     )
     path_ptr = ctypes.c_wchar_p()
     try:
@@ -172,7 +175,9 @@ def is_hidden_or_system(path: Path, st: os.stat_result | None = None) -> bool:
     except OSError:
         return False
     attrs = getattr(st, "st_file_attributes", 0)
-    return bool(attrs & (stat.FILE_ATTRIBUTE_HIDDEN | stat.FILE_ATTRIBUTE_SYSTEM)) if attrs else False
+    return (
+        bool(attrs & (stat.FILE_ATTRIBUTE_HIDDEN | stat.FILE_ATTRIBUTE_SYSTEM)) if attrs else False
+    )
 
 
 # --------------------------------------------------------------------------- #

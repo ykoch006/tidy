@@ -127,7 +127,7 @@ def test_unapproved_moves_do_not_reserve_names(downloads: Path, make_file) -> No
 def test_folder_into_itself_is_skipped(downloads: Path, make_file) -> None:
     make_file(downloads / "Stuff" / "x.txt")
     planner = Planner(CategoryTree())
-    item = FileItem(downloads / "Stuff", downloads, 1, 0)
+    item = FileItem(downloads / "Stuff", downloads, 1, 0, kind=ItemKind.FOLDER)
     plan = planner.build(downloads, [item], [Classification("other", 0.9, Source.RULE, [])])
     planner.set_custom_folder(plan, plan.moves[0], "Stuff/Inner")
     assert plan.moves[0].status is MoveStatus.SKIPPED

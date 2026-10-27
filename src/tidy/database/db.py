@@ -81,6 +81,10 @@ MIGRATIONS: list[str] = [
         UNIQUE(pattern)
     );
     """,
+    # v2 — where an undo restored an item (may differ from source on collision)
+    """
+    ALTER TABLE moves ADD COLUMN undo_path TEXT
+    """,
 ]
 
 

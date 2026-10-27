@@ -80,9 +80,7 @@ def find_groups(items: list[FileItem]) -> list[Group]:
     return groups
 
 
-def apply_groups(
-    items: list[FileItem], classifications: list[Classification]
-) -> dict[int, str]:
+def apply_groups(items: list[FileItem], classifications: list[Classification]) -> dict[int, str]:
     """Harmonise classifications in place; return ``{index: group_id}``."""
     membership: dict[int, str] = {}
     for group in find_groups(items):

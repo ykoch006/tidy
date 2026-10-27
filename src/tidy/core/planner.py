@@ -43,8 +43,11 @@ class Planner:
                     f"{percent(self.threshold)} threshold — suggested {cls.category}"
                 )
                 cls = Classification(REVIEW, cls.confidence, cls.source, cls.reasons)
-            plan.moves.append(PlannedMove(item=item, classification=cls, destination=item.path,
-                                          group_id=groups.get(index)))
+            plan.moves.append(
+                PlannedMove(
+                    item=item, classification=cls, destination=item.path, group_id=groups.get(index)
+                )
+            )
         self.recompute(plan)
         return plan
 
@@ -125,9 +128,7 @@ class Planner:
 
 
 def _same(a: Path, b: Path) -> bool:
-    return os.path.normcase(os.path.abspath(a)) == os.path.normcase(
-        os.path.abspath(b)
-    )
+    return os.path.normcase(os.path.abspath(a)) == os.path.normcase(os.path.abspath(b))
 
 
 def _is_inside(candidate: Path, container: Path) -> bool:

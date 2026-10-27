@@ -87,13 +87,14 @@ class CategoryTree:
             folder = str(item.get("folder", "")).strip()
             if not key or key in cats or not folder:
                 continue
-            cats[key] = Category(key, folder, item.get("label") or folder.split("/")[-1],
-                                 item.get("description", ""))
+            cats[key] = Category(
+                key, folder, item.get("label") or folder.split("/")[-1], item.get("description", "")
+            )
         for key, change in (overrides or {}).items():
             if key not in cats:
                 continue
             cat = cats[key]
-            if "folder" in change and change["folder"]:
+            if change.get("folder"):
                 cat = replace(cat, folder=str(change["folder"]))
             if "enabled" in change and key not in (REVIEW, OTHER):
                 cat = replace(cat, enabled=bool(change["enabled"]))

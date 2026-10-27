@@ -105,7 +105,8 @@ def test_junctions_not_followed(tmp_path: Path, downloads: Path, make_file) -> N
     make_file(outside / "private.txt")
     subprocess.run(
         ["cmd", "/c", "mklink", "/J", str(downloads / "link"), str(outside)],
-        check=True, capture_output=True,
+        check=True,
+        capture_output=True,
     )
     s = Scanner(ScanOptions(include_subdirectories=True))
     assert names(s.scan(downloads)) == set()

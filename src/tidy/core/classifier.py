@@ -52,7 +52,9 @@ class Classifier:
             rule = self.learned.match(item.name)
             if rule is not None and rule.category in self.categories:
                 return Classification(
-                    rule.category, 0.95, Source.LEARNED,
+                    rule.category,
+                    0.95,
+                    Source.LEARNED,
                     [f"you previously filed names like '{rule.pattern}' here"],
                 )
 
@@ -62,20 +64,26 @@ class Classifier:
         try:
             refined = self.content.analyse(item, result)
         except Exception:  # content parsers handle hostile input; never let one break a scan
-            log.warning("Content analysis failed", extra={"ctx": {"path": str(item.path)}},
-                        exc_info=True)
+            log.warning(
+                "Content analysis failed", extra={"ctx": {"path": str(item.path)}}, exc_info=True
+            )
             return result
         if refined is None:
             return result
         if refined.category == result.category:
             return Classification(
-                result.category, max(result.confidence, refined.confidence),
+                result.category,
+                max(result.confidence, refined.confidence),
                 refined.source if refined.confidence > result.confidence else result.source,
                 result.reasons + refined.reasons,
             )
         if refined.confidence >= result.confidence:
-            return Classification(refined.category, refined.confidence, refined.source,
-                                  refined.reasons + [f"(rules suggested {result.category})"])
+            return Classification(
+                refined.category,
+                refined.confidence,
+                refined.source,
+                refined.reasons + [f"(rules suggested {result.category})"],
+            )
         return result
 
     def _normalise(self, result: Classification) -> Classification:

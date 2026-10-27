@@ -24,7 +24,16 @@ log = get_logger(__name__)
 
 # Extensions of downloads that are still being written by a browser or tool.
 INCOMPLETE_SUFFIXES = frozenset(
-    {".crdownload", ".part", ".partial", ".download", ".opdownload", ".!ut", ".tmp", ".tidy-partial"}
+    {
+        ".crdownload",
+        ".part",
+        ".partial",
+        ".download",
+        ".opdownload",
+        ".!ut",
+        ".tmp",
+        ".tidy-partial",
+    }
 )
 MAX_SAMPLE_NAMES = 40
 
@@ -96,8 +105,13 @@ class Scanner:
         yield from self._walk(root, root, depth=0)
         log.info(
             "Scan finished",
-            extra={"ctx": {"files": self.stats.files, "folders": self.stats.folders,
-                           "skipped": len(self.stats.skipped)}},
+            extra={
+                "ctx": {
+                    "files": self.stats.files,
+                    "folders": self.stats.folders,
+                    "skipped": len(self.stats.skipped),
+                }
+            },
         )
 
     def _skip(self, path: Path, reason: str) -> None:
@@ -179,50 +193,72 @@ class Scanner:
 
     def _folder_item(self, root: Path, path: Path, project_type: str | None) -> FileItem | None:
         """Summarise a folder that will be moved as one unit."""
-        size = 0
-        count = 0
-        newest = 0
-        exts: Counter[str] = Counter()
-        samples: list[str] = []
-        stack = [path]
-        while stack:
-            self._check_cancel()
-            current = stack.pop()
-            try:
-                with os.scandir(current) as it:
-                    for entry in it:
-                        try:
-                            st = entry.stat(follow_symlinks=False)
-                        except OSError:
-                            continue
-                        child = Path(entry.path)
-                        if paths.is_link_like(child, st):
-                            continue  # links inside are moved as links, never followed
-                        if entry.is_dir(follow_symlinks=False):
-                            stack.append(child)
-                        else:
-                            count += 1
-                            size += st.st_size
-                            newest = max(newest, st.st_mtime_ns)
-                            exts[os.path.splitext(entry.name)[1].lower()] += 1
-                            if len(samples) < MAX_SAMPLE_NAMES:
-                                samples.append(entry.name)
-            except OSError as exc:
-                self._skip(current, f"cannot read folder: {exc.strerror or exc}")
-                if current == path:
-                    return None
         try:
-            mtime = path.stat().st_mtime_ns
-        except OSError:
+            summary = summarise_folder(path, self.cancel)
+        except OSError as exc:
+            self._skip(path, f"cannot read folder: {exc.strerror or exc}")
             return None
+        for unreadable in summary.unreadable:
+            self._skip(unreadable, "cannot read folder")
         return FileItem(
             path=path,
             root=root,
-            size=size,
-            mtime_ns=max(mtime, newest),
+            size=summary.size,
+            mtime_ns=summary.mtime_ns,
             kind=ItemKind.FOLDER,
             project_type=project_type,
-            file_count=count,
-            sample_names=tuple(samples),
-            ext_counts=dict(exts),
+            file_count=summary.file_count,
+            sample_names=tuple(summary.samples),
+            ext_counts=dict(summary.ext_counts),
         )
+
+
+@dataclass(slots=True)
+class FolderSummary:
+    size: int = 0
+    file_count: int = 0
+    mtime_ns: int = 0  # newest of the folder itself and anything inside
+    link_count: int = 0  # links/junctions inside (never followed)
+    ext_counts: Counter[str] = field(default_factory=Counter)
+    samples: list[str] = field(default_factory=list)
+    unreadable: list[Path] = field(default_factory=list)
+
+
+def summarise_folder(path: Path, cancel: threading.Event | None = None) -> FolderSummary:
+    """Walk a folder (without following links) and summarise it.
+
+    Also used by the organiser to fingerprint a folder just before moving it.
+    Raises ``OSError`` only if ``path`` itself cannot be read.
+    """
+    summary = FolderSummary(mtime_ns=path.stat().st_mtime_ns)
+    stack = [path]
+    while stack:
+        if cancel is not None and cancel.is_set():
+            raise ScanCancelled()
+        current = stack.pop()
+        try:
+            with os.scandir(current) as it:
+                for entry in it:
+                    try:
+                        st = entry.stat(follow_symlinks=False)
+                    except OSError:
+                        continue
+                    child = Path(entry.path)
+                    if paths.is_link_like(child, st):
+                        summary.link_count += 1
+                        continue
+                    if entry.is_dir(follow_symlinks=False):
+                        summary.mtime_ns = max(summary.mtime_ns, st.st_mtime_ns)
+                        stack.append(child)
+                    else:
+                        summary.file_count += 1
+                        summary.size += st.st_size
+                        summary.mtime_ns = max(summary.mtime_ns, st.st_mtime_ns)
+                        summary.ext_counts[os.path.splitext(entry.name)[1].lower()] += 1
+                        if len(summary.samples) < MAX_SAMPLE_NAMES:
+                            summary.samples.append(entry.name)
+        except OSError:
+            if current == path:
+                raise
+            summary.unreadable.append(current)
+    return summary

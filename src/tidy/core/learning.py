@@ -43,10 +43,12 @@ class LearnedRules:
         with self._lock:
             if self._cache is None:
                 rows = self._db.query(
-                    "SELECT id, pattern, category, hits FROM user_rules ORDER BY length(pattern) DESC"
+                    "SELECT id, pattern, category, hits FROM user_rules "
+                    "ORDER BY length(pattern) DESC"
                 )
-                self._cache = [LearnedRule(r["id"], r["pattern"], r["category"], r["hits"])
-                               for r in rows]
+                self._cache = [
+                    LearnedRule(r["id"], r["pattern"], r["category"], r["hits"]) for r in rows
+                ]
             return self._cache
 
     def all(self) -> list[LearnedRule]:
