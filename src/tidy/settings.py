@@ -8,7 +8,7 @@ from typing import Any
 from tidy.database import Database
 
 SETTINGS_KEY = "app_settings"
-DEFAULT_AI_MODEL = "claude-haiku-5-5"
+DEFAULT_AI_MODEL = "claude-opus-5-5"
 
 
 @dataclass

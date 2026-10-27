@@ -203,3 +203,34 @@ def test_duplicates_found_after_scan(qtbot, window, populated: Path, make_file) 
     assert sum("identical to 1 other file" in n for n in notes) == 2
     assert window.dashboard.stat_duplicates.value.text() == "1"
     assert sorted(p.name for p in populated.iterdir()).count("Jane Doe CV (1).pdf") == 1
+
+
+def test_ai_requires_explicit_confirmation(qtbot, window, no_modal_dialogs) -> None:
+    panel = window.settings.ai_panel
+    assert not panel.enabled.isChecked()
+    panel.enabled.setChecked(True)
+    panel.consent_names.setChecked(True)
+    window.settings._save()  # the consent dialog is answered "No" by the fixture
+    assert any(kind == "question" for kind, _ in no_modal_dialogs)
+    assert window.ctx.settings.ai_enabled is False
+
+
+def test_ai_failure_does_not_break_scan(qtbot, window, populated, monkeypatch) -> None:
+    """A failing API (no network used) must leave the rule-based plan intact."""
+    from types import SimpleNamespace
+
+    from tidy.ai import anthropic_classifier as ac
+
+    def create(**kwargs):
+        raise ConnectionError("offline")
+
+    messages = SimpleNamespace(create=create)
+    Failing = SimpleNamespace(messages=messages, beta=SimpleNamespace(messages=messages))
+
+    monkeypatch.setattr(ac.AnthropicClassifier, "client", lambda self: Failing)
+    s = window.ctx.settings
+    s.ai_enabled, s.ai_consent_filenames = True, True
+    window.ctx.save_settings(s)
+    scan(qtbot, window)
+    assert window.model.rowCount() == 5
+    assert "offline" in window.ctx.last_ai_summary

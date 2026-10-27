@@ -59,6 +59,7 @@ class AppContext(QObject):
         # Optional layers, installed by later modules (content analysis, AI).
         self.content_layer_factory: Callable[[AppSettings], Any] | None = None
         self.post_classify_factory: Callable[[AppContext], Any] | None = None
+        self.last_ai_summary: str = ""
 
     # ------------------------------------------------------------------ #
     def _initial_root(self) -> Path:
@@ -146,6 +147,7 @@ class AppContext(QObject):
         self._scan_worker = worker
         self._set_busy(True)
         self.result = None
+        self.last_ai_summary = ""
         self.scan_started.emit(str(root))
         log.info("Scan requested", extra={"ctx": {"root": str(root)}})
         self.runner.start(worker)
