@@ -181,3 +181,25 @@ def test_screenshot(qtbot, window, populated: Path, tmp_path: Path) -> None:
         image = window.grab()
         assert not image.isNull()
         image.save(str(tmp_path / f"{key}.png"))
+
+
+def test_duplicates_found_after_scan(qtbot, window, populated: Path, make_file) -> None:
+    make_file(populated / "Jane Doe CV (1).pdf", b"%PDF-1.4 cv")  # identical copy
+    make_file(populated / "notes.txt", b"one")
+    make_file(populated / "notes (1).txt", b"two, different")
+    with qtbot.waitSignal(
+        window.ctx.extra_results,
+        timeout=20_000,
+        check_params_cb=lambda kind, r: kind == "duplicates" and r is not None,
+    ):
+        window.ctx.start_scan()
+    page = window.duplicates
+    assert page.tree.topLevelItemCount() == 1
+    assert page.report.wasted_bytes == len(b"%PDF-1.4 cv")
+    assert page.similar.topLevelItemCount() == 1
+    assert page.compare.rowCount() == 2
+    model = window.model
+    notes = [model.note_for(model.move_at(r)) for r in range(model.rowCount())]
+    assert sum("identical to 1 other file" in n for n in notes) == 2
+    assert window.dashboard.stat_duplicates.value.text() == "1"
+    assert sorted(p.name for p in populated.iterdir()).count("Jane Doe CV (1).pdf") == 1

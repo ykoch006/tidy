@@ -70,11 +70,27 @@ class PlanModel(QAbstractTableModel):
         self._planner_factory = planner_factory
         self._label_for = label_for
         self._icons = _IconCache()
+        self._duplicates: dict[str, int] = {}  # normcased path -> number of other copies
 
     # -- plan ------------------------------------------------------------ #
     @property
     def plan(self) -> Plan | None:
         return self._plan
+
+    def set_duplicates(self, copies: dict[str, int]) -> None:
+        self._duplicates = copies
+        if self.rowCount():
+            self.dataChanged.emit(
+                self.index(0, Col.NOTE), self.index(self.rowCount() - 1, Col.NOTE)
+            )
+
+    def duplicate_count(self, move: PlannedMove) -> int:
+        return self._duplicates.get(os.path.normcase(str(move.item.path)), 0)
+
+    def note_for(self, move: PlannedMove) -> str:
+        others = self.duplicate_count(move)
+        dup = f"identical to {others} other file{'s' if others != 1 else ''}" if others else ""
+        return " · ".join(x for x in (move.note, dup) if x)
 
     def set_plan(self, plan: Plan | None) -> None:
         self.beginResetModel()
@@ -152,7 +168,7 @@ class PlanModel(QAbstractTableModel):
             if col == Col.WHY:
                 return cls.explain()
             if col == Col.NOTE:
-                return move.note
+                return self.note_for(move)
             return None
 
         if role == Qt.ItemDataRole.EditRole:
@@ -183,7 +199,7 @@ class PlanModel(QAbstractTableModel):
                     f"• {r}" for r in cls.reasons
                 )
             if col == Col.NOTE:
-                return move.note or None
+                return self.note_for(move) or None
             return None
 
         if role == Qt.ItemDataRole.DecorationRole and col == Col.NAME:
@@ -264,6 +280,7 @@ class PlanFilterProxy(QSortFilterProxyModel):
         "low": "Low confidence (<70%)",
         "edited": "Edited by you",
         "groups": "Related groups",
+        "duplicates": "Has identical copies",
     }
 
     def __init__(self, parent=None) -> None:  # type: ignore[no-untyped-def]
@@ -313,6 +330,8 @@ class PlanFilterProxy(QSortFilterProxyModel):
         if status == "edited" and not move.edited:
             return False
         if status == "groups" and not move.group_id:
+            return False
+        if status == "duplicates" and not model.duplicate_count(move):
             return False
         if self._text:
             hay = " ".join(

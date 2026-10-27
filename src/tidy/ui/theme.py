@@ -193,6 +193,13 @@ def stylesheet(p: Palette) -> str:
     QMenu::item {{ padding: 6px 18px; border-radius: 6px; }}
     QMenu::item:selected {{ background: {p.selection}; }}
     QDialog {{ background: {p.bg}; }}
+    QTabWidget::pane {{ border: none; }}
+    QTabBar::tab {{
+        background: transparent; color: {p.muted}; padding: 8px 14px; margin-right: 4px;
+        border: none; border-bottom: 2px solid transparent; font-weight: 500;
+    }}
+    QTabBar::tab:selected {{ color: {p.text}; border-bottom: 2px solid {p.accent}; }}
+    QTabBar::tab:hover {{ color: {p.text}; }}
     """
 
 

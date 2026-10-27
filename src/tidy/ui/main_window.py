@@ -105,7 +105,7 @@ class MainWindow(QMainWindow):
         QShortcut(QKeySequence("Ctrl+R"), self, activated=ctx.start_scan)
         QShortcut(QKeySequence("Ctrl+F"), self, activated=self._focus_search)
 
-    def add_page(self, key: str, label: str, page: QWidget, before: str = "history") -> None:
+    def add_page(self, key: str, label: str, page: QWidget) -> None:
         """Register an extra page (used by optional features) before ``build``."""
         index = len(self._entries)
         self._entries.insert(index, (key, label, page))
