@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import enum
 from dataclasses import dataclass, field
-from pathlib import Path
+from pathlib import Path, PurePath
 
 
 class ItemKind(enum.StrEnum):
@@ -83,6 +83,8 @@ class PlannedMove:
     status: MoveStatus = MoveStatus.PROPOSED
     group_id: str | None = None
     note: str = ""
+    custom_folder: PurePath | None = None  # user-edited relative destination folder
+    edited: bool = False  # user changed the category or folder
 
     @property
     def is_noop(self) -> bool:
