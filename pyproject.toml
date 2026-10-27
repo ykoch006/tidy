@@ -1,0 +1,74 @@
+[build-system]
+requires = ["hatchling>=1.24"]
+build-backend = "hatchling.build"
+
+[project]
+name = "tidy"
+version = "0.1.0"
+description = "An intelligent, safety-first desktop file organiser for messy Downloads folders."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.12"
+authors = [{ name = "ykoch" }]
+keywords = ["file-organiser", "downloads", "desktop", "pyside6", "windows"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Win32 (MS Windows)",
+    "Environment :: X11 Applications :: Qt",
+    "Intended Audience :: End Users/Desktop",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: MacOS",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: System :: Filesystems",
+    "Topic :: Utilities",
+]
+dependencies = [
+    "PySide6>=6.7",
+    "PyMuPDF>=1.24",
+    "python-docx>=1.1",
+    "Pillow>=10.3",
+]
+
+[project.optional-dependencies]
+ai = ["anthropic>=0.40"]
+dev = [
+    "pytest>=8.2",
+    "pytest-qt>=4.4",
+    "ruff>=0.6",
+    "anthropic>=0.40",
+]
+build = ["pyinstaller>=6.10"]
+
+[project.scripts]
+tidy-cli = "tidy.cli:main"
+
+[project.gui-scripts]
+tidy = "tidy.app:main"
+
+[project.urls]
+Homepage = "https://github.com/ykoch006/tidy"
+Issues = "https://github.com/ykoch006/tidy/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/tidy"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers"
+markers = [
+    "gui: tests that need a Qt application (run offscreen)",
+    "slow: tests that create large synthetic collections",
+]
+filterwarnings = ["ignore::DeprecationWarning:fitz.*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "RUF"]
+ignore = ["RUF012"]
