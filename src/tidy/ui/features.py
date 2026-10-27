@@ -19,3 +19,16 @@ log = get_logger(__name__)
 
 def install_features(ctx: AppContext, window: MainWindow) -> None:
     """Register optional layers and pages. Each one is isolated from the others."""
+    for installer in (_install_content,):
+        try:
+            installer(ctx, window)
+        except Exception:
+            log.exception(
+                "Optional feature failed to load", extra={"ctx": {"feature": installer.__name__}}
+            )
+
+
+def _install_content(ctx: AppContext, window: MainWindow) -> None:
+    from tidy.core.content_analyser import ContentAnalyser
+
+    ctx.content_layer_factory = lambda settings: ContentAnalyser()
