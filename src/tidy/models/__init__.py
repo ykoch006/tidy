@@ -28,6 +28,7 @@ class FileItem:
     project_type: str | None = None  # set when a folder is a recognised project
     file_count: int = 1  # number of files inside, for folders
     sample_names: tuple[str, ...] = ()  # for folders: some contained file names
+    ext_counts: dict[str, int] = field(default_factory=dict)  # for folders
 
     @property
     def name(self) -> str:
