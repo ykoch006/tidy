@@ -40,6 +40,11 @@ def main(argv: list[str] | None = None) -> int:
     from tidy.ui import theme
     from tidy.ui.context import AppContext
 
+    if sys.platform == "win32":  # own taskbar group/icon instead of python.exe's
+        import ctypes
+
+        ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("Tidy.FileOrganiser")
+
     QGuiApplication.setHighDpiScaleFactorRoundingPolicy(
         Qt.HighDpiScaleFactorRoundingPolicy.PassThrough
     )
@@ -47,6 +52,11 @@ def main(argv: list[str] | None = None) -> int:
     app.setApplicationName(APP_NAME)
     app.setApplicationVersion(__version__)
     app.setOrganizationName(APP_NAME)
+    from PySide6.QtGui import QIcon
+
+    icon_path = theme.ASSETS / "tidy.png"
+    if icon_path.exists():
+        app.setWindowIcon(QIcon(str(icon_path)))
 
     def excepthook(
         exc_type: type[BaseException], exc: BaseException, tb: TracebackType | None
